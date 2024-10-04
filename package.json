@@ -1,0 +1,23 @@
+{
+  "name": "taskremind",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "build": "npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.1.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.15",
+    "nodemon": "^3.1.7"
+  }
+}
