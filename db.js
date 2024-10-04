@@ -12,8 +12,5 @@ module.exports = () => {
   return mongoose.connect(dbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000,  
-    connectTimeoutMS: 30000,         
-    socketTimeoutMS: 45000,
   });
 };
