@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+.env
+
 # User-specific files
 *.rsuser
 *.suo
@@ -12,6 +14,7 @@
 *.env
 /.env
 .env/
+
 /node_modules
 node_modules/
 
