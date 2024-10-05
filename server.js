@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors')
 require('dotenv').config();
 // const tasksRoute = require('./controllers/taskController')
-const getAllTasks = require('./routes/tasksRoutes')
+const taskRoutes = require('./routes/tasksRoutes')
 const {errorHandler} = require('./middlewares')
 const cronJobs = require('./jobs/cronJobs')
 
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors())
 
 // app.use('/tasks', tasksRoute)
-app.use('/', getAllTasks)
+app.use('/', taskRoutes)
 app.use(errorHandler)
 
 app.get("/", (req, res) => {
