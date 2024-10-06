@@ -16,9 +16,12 @@ const tasks = async () => {
   }
 };
 
-// specific timing  (12:54 PM)
 
-cron.schedule('15 06 * * *', async () => {
+// const tasks = async()=>{
+//     return [{firstName:"Test", lastName:"User", birthDate:"10 07", workEmail:"sattu3911@gmail.com"}]
+// }
+
+const processBirthdays = async () => {
     const today = new Date();
     const todayDate = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;  
     try {
@@ -39,8 +42,10 @@ cron.schedule('15 06 * * *', async () => {
     } catch (error) {
         console.log("Error:", error);
     }
-});
+}
 
-module.exports = cron;
+cron.schedule('0 6 * * *', processBirthdays );
+
+module.exports = {cron, processBirthdays};
 
 

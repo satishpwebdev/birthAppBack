@@ -5,7 +5,7 @@ require("dotenv").config();
 // const tasksRoute = require('./controllers/taskController')
 const taskRoutes = require("./routes/tasksRoutes");
 const { errorHandler } = require("./middlewares");
-const cronJobs = require("./jobs/cronJobs");
+const {cron, processBirthdays} = require("./jobs/cronJobs");
 
 const connectDB = require("./db");
 
@@ -22,6 +22,9 @@ app.get("/", (req, res) => {
   res.json("Radhe Radhe");
 });
 
+
+
+
 connectDB()
   .then((res) => {
     console.log("Connected");
@@ -30,7 +33,7 @@ connectDB()
     });
 
     //Initializing the cron job
-    cronJobs;
+    cron;
   })
   .catch((err) => {
     console.log(err);
