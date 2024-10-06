@@ -18,7 +18,7 @@ const tasks = async () => {
 
 // specific timing  (12:54 PM)
 
-cron.schedule('0 6 * * *', async () => {
+cron.schedule('15 06 * * *', async () => {
     const today = new Date();
     const todayDate = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;  
     try {
