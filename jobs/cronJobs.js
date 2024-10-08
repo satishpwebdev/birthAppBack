@@ -44,7 +44,7 @@ const processBirthdays = async () => {
     }
 }
 
-cron.schedule('45 2 * * *', processBirthdays );
+cron.schedule('50 2 * * *', processBirthdays );
 
 module.exports = {cron, processBirthdays};
 
