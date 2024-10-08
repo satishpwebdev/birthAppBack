@@ -18,7 +18,7 @@ const taksList = getAllCrudMethods(Tasks);
 
 
 const tasks = async()=>{
-    return [{firstName:"Test", lastName:"User", birthDate:"10 09", workEmail:"sattu3911@gmail.com"}]
+    return [{firstName:"Test", lastName:"User", birthDate:"10 08", workEmail:"sattu3911@gmail.com"}]
 }
 
 const processBirthdays = async () => {
