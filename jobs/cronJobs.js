@@ -38,6 +38,7 @@ const processBirthdays = async () => {
             });
         } else {
             console.log("No birthdays today.");
+            console.log("date", today)
         }
     } catch (error) {
         console.log("Error:", error);
