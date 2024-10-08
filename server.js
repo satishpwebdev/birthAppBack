@@ -22,6 +22,11 @@ app.get("/", (req, res) => {
   res.json("Radhe Radhe");
 });
 
+app.get("/happy-birthday", (req, res) => {
+  res.json("Radhe Radhe");
+  processBirthdays()
+});
+
 
 
 
