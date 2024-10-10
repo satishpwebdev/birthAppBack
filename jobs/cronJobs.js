@@ -5,21 +5,21 @@ const Tasks = require("../models/taskModel");
 const getAllCrudMethods = require("../services/index");
 const taksList = getAllCrudMethods(Tasks);
 
-const tasks = async () => {
-  try {
-    const res = await taksList.getAll();
-    console.log(res); 
-    return res;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-};
+// const tasks = async () => {
+//   try {
+//     const res = await taksList.getAll();
+//     console.log(res); 
+//     return res;
+//   } catch (error) {
+//     console.log(error);
+//     return [];
+//   }
+// };
 
 
-// const tasks = async()=>{
-//     return [{firstName:"Test", lastName:"User", birthDate:"10 07", workEmail:"sattu3911@gmail.com"}]
-// }
+const tasks = async()=>{
+    return [{firstName:"Test", lastName:"User", birthDate:"10 10", workEmail:"sattu3911@gmail.com"}]
+}
 
 const processBirthdays = async () => {
     const today = new Date();
@@ -44,7 +44,7 @@ const processBirthdays = async () => {
     }
 }
 
-cron.schedule('0 6 * * *', processBirthdays );
+cron.schedule('28 6 * * *', processBirthdays );
 
 module.exports = {cron, processBirthdays};
 
