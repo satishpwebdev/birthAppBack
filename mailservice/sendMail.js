@@ -15,7 +15,6 @@ const transporter = nodemailer.createTransport({
 const sendMail = async (to, name) => {
   const data = await ejs.renderFile(templatePath, {name})
   const mailOptions = {
-    // from: '"John Doe" sattu3911@gmail.com',
     to,
     subject: `Happy Birthday, ${name}! 🎉`,
     text: `Dear ${name},\n\nWishing you a very Happy Birthday! Enjoy your special day!\n\nBest wishes,\nWillowood Chemicals LTD.`,
