@@ -2,6 +2,8 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const ejs = require("ejs");
 const fs = require("fs").promises;
+const axios = require("axios");
+
 
 const templatePath = path.join(__dirname, "../views/template.ejs");
 
@@ -11,6 +13,23 @@ async function getBase64Image(imagePath) {
   const image = await fs.readFile(imagePath);
   return `data:image/png;base64,${image.toString("base64")}`;
 }
+
+const sendTelegramMessage = async (message) => {
+  const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+  const data = {
+    chat_id: chatId,
+    text: message
+  };
+
+  try {
+    const response = await axios.post(url, data);
+  } catch (error) {
+    console.error("Error sending Telegram message:", error.response ? error.response.data : error.message);
+  }
+};
 
 const createTransporter = async () => {
   return nodemailer.createTransport({
@@ -48,15 +67,22 @@ const sendMail = async (to, name, retries = 3) => {
 
     const info = await transporter.sendMail(mailOptions);
     console.log(`Email sent to ${to}: ${info.response}`);
+    const telegramMessage = `✅ Successfully sent email to ${name} (${to}) at ${new Date().toLocaleString()}`;
+    await sendTelegramMessage(telegramMessage);
     return info;
   } catch (error) {
     console.error(`Error sending email to ${to}:`, error);
+    const telegramErrorMessage = `❌ Failed to send email to ${name} (${to})\nError: ${error.message}\nRetries left: ${retries}\nTime: ${new Date().toLocaleString()}`;
+    await sendTelegramMessage(telegramErrorMessage);
+
     if (retries > 0) {
       console.log(`Retrying... (${3 - retries + 1} of 3)`);
       await delay(5000);
       return sendMail(to, name, retries - 1);
     } else {
       console.error(`Failed to send email to ${to} after 3 attempts.`);
+      const finalErrorMessage = `❌ Failed to send email to ${name} (${to}) after 3 attempts\nTime: ${new Date().toLocaleString()}`;
+      await sendTelegramMessage(finalErrorMessage);
       throw error;
     }
   }
