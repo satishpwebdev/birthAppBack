@@ -1,10 +1,11 @@
-
 const nodemailer = require("nodemailer");
 const path = require("path");
 const ejs = require("ejs");
 const fs = require("fs").promises;
 
 const templatePath = path.join(__dirname, "../views/template.ejs");
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function getBase64Image(imagePath) {
   const image = await fs.readFile(imagePath);
@@ -52,6 +53,7 @@ const sendMail = async (to, name, retries = 3) => {
     console.error(`Error sending email to ${to}:`, error);
     if (retries > 0) {
       console.log(`Retrying... (${3 - retries + 1} of 3)`);
+      await delay(5000);
       return sendMail(to, name, retries - 1);
     } else {
       console.error(`Failed to send email to ${to} after 3 attempts.`);
@@ -82,15 +84,18 @@ const processQueue = async () => {
   }
 
   const batch = emailQueue.shift();
-
   console.log(`Processing batch of ${batch.length} emails`);
-  console.log(batch);
 
-  await Promise.all(batch.map(({ workEmail, firstName }) => sendMail(workEmail, firstName)));
+  for (const { workEmail, firstName } of batch) {
+    try {
+      await sendMail(workEmail, firstName);
+      await delay(20000);
+    } catch (error) {
+      console.error(`Failed to send email to ${workEmail}: ${error.message}`);
+    }
+  }
 
-  setTimeout(() => {
-    processQueue();
-  }, 2000);
+  processQueue();
 };
 
 module.exports = { addEmailsToQueue };

@@ -16,10 +16,6 @@ const tasks = async () => {
   }
 };
 
-// const tasks = async () => {
-//   return [{ firstName: "Test", lastName: "User", birthDate: "10 10", workEmail: "sattu3911@gmail.com" }];
-// };
-
 const processBirthdays = async () => {
   const today = new Date();
   const todayDate = `${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(
@@ -49,6 +45,6 @@ const processBirthdays = async () => {
   }
 };
 
-cron.schedule("45 00 * * *", processBirthdays);
+cron.schedule("45 0 * * *", processBirthdays);
 
 module.exports = { cron, processBirthdays };
