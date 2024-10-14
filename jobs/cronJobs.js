@@ -5,10 +5,25 @@ const Tasks = require("../models/taskModel");
 const getAllCrudMethods = require("../services/index");
 const taksList = getAllCrudMethods(Tasks);
 
+// const tasks = async () => {
+//   try {
+//     const res = await taksList.getAll();
+//     console.log(res);
+//     return res;
+//   } catch (error) {
+//     console.log(error);
+//     return [];
+//   }
+// };
+
 const tasks = async () => {
+  const today = new Date();
+  const currentMonth = String(today.getMonth() + 1).padStart(2, "0");
+
   try {
-    const res = await taksList.getAll();
-    console.log(res);
+    const res = await taksList.getByMonth({
+      birthDate: new RegExp(`^${currentMonth}`)
+    });
     return res;
   } catch (error) {
     console.log(error);
@@ -34,9 +49,9 @@ const processBirthdays = async () => {
     console.log("Today's birthdays:", todayBirthdays);
     if (todayBirthdays.length > 0) {
       addEmailsToQueue(todayBirthdays);
-    //   todayBirthdays.forEach((birthday) => {
-    //        sendMail(birthday.workEmail, birthday.firstName);
-    //   });
+      //   todayBirthdays.forEach((birthday) => {
+      //        sendMail(birthday.workEmail, birthday.firstName);
+      //   });
     } else {
       console.log("No birthdays today.");
     }

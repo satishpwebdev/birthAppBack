@@ -3,6 +3,9 @@ const getAllCrudMethods = (Model) => {
       getAll: () => {
          return Model.find();
       },
+      getByMonth: (query = {}) => {
+         return Model.find(query);
+       },
       geyById: (id) => {
          return Model.findById(id);
       },

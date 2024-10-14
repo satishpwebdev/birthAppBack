@@ -21,7 +21,7 @@
         overflow: hidden;
       }
       .email-header {
-        background-color: #ff6f61;
+        background-color:<%= birthdayColor %>;
         color: white;
         text-align: center;
         padding: 20px 0;
@@ -44,7 +44,7 @@
         color: #666;
       }
       .email-footer {
-        background-color: #ff6f61;
+        background-color:<%= birthdayColor %>;
         color: white;
         text-align: center;
         padding: 10px 0;
@@ -71,6 +71,27 @@
       .birthday-image img {
         max-width: 100%;
       }
+
+      .signature {
+        padding: 20px;
+        border-top: 1px solid #ddd;
+        text-align: left;
+        font-size: 16px;
+        color: #333;
+        line-height: 1.6;
+      }
+      .signature p {
+        margin: 5px 0;
+      }
+      .signature .name {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .signature .title {
+        font-size: 14px;
+        color: #777;
+      }
     </style>
   </head>
   <body>
@@ -80,13 +101,18 @@
       </div>
 
       <div class="email-body">
-        <h2>Wishing you a day filled with happiness and a year filled with joy!</h2>
+        <h2><%= birthdayMessage %></h2>
         <p>May all your dreams come true, and may this birthday be as special as you are!</p>
       </div>
       <div class="birthday-image">
-        <img src="cid:cake" alt="Happy Birthday">
-        
-    </div>
+        <img src="cid:randomImage" alt="Happy Birthday" />
+      </div>
+
+      <div class="signature">
+        <p>Regards,</p>
+        <p class="name">Parikshit Mundhra</p>
+        <p class="title">Willowood Chemicals LTD.</p>
+      </div>
 
       <div class="email-footer">
         <p>Willowood Chemicals LTD.</p>

@@ -3,15 +3,48 @@ const path = require("path");
 const ejs = require("ejs");
 const fs = require("fs").promises;
 const axios = require("axios");
-
+const {getRandomWishMessage, getRandomColors} = require('../handlers/randomContent')
 
 const templatePath = path.join(__dirname, "../views/template.ejs");
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const getContentType = (fileExtension) => {
+  switch (fileExtension.toLowerCase()) {
+    case "png":
+      return "image/png";
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "gif":
+      return "image/gif";
+    default:
+      return "application/octet-stream";
+  }
+};
+
+const getRandomImage = async () => {
+  try {
+    const imagesDir = path.join(__dirname, "../images");
+    const files = await fs.readdir(imagesDir);
+    const imageFiles = files.filter((file) => /\.(png|jpg|jpeg|gif)$/.test(file));
+    if (imageFiles.length === 0) {
+      throw new Error("No images found in the folder");
+    }
+    const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
+    const imagePath = path.join(imagesDir, randomImage);
+    return { imagePath, randomImage };
+  } catch (error) {
+    console.error("Error fetching random image:", error);
+    throw error;
+  }
+};
+
 async function getBase64Image(imagePath) {
   const image = await fs.readFile(imagePath);
-  return `data:image/png;base64,${image.toString("base64")}`;
+  const fileExtension = imagePath.split(".").pop().toLowerCase();
+  const mimeType = getContentType(fileExtension);
+  return `data:${mimeType};base64,${image.toString("base64")}`;
 }
 
 const sendTelegramMessage = async (message) => {
@@ -26,6 +59,7 @@ const sendTelegramMessage = async (message) => {
 
   try {
     const response = await axios.post(url, data);
+    console.log(response.statusText)
   } catch (error) {
     console.error("Error sending Telegram message:", error.response ? error.response.data : error.message);
   }
@@ -46,20 +80,27 @@ const sendMail = async (to, name, retries = 3) => {
     const transporter = await createTransporter();
     const template = await fs.readFile(templatePath, "utf-8");
 
-    const cake = await getBase64Image(path.join(__dirname, "../images/cake.png"));
-    const data = ejs.render(template, { name, cake });
+    const { imagePath, randomImage } = await getRandomImage();
+    const imageBase64 = await getBase64Image(imagePath);
+    const birthdayMessage = await getRandomWishMessage();
+    const birthdayColor = await getRandomColors();
+
+    const data = ejs.render(template, { name, imageBase64,birthdayMessage, birthdayColor });
+
+    
+    const fileExtension = randomImage.split(".").pop();
 
     const mailOptions = {
-      from: `"Willowood Chemicals LTD" <${process.env.APP_EMAIL}>`,
+      from: `"Parikshit Mundhra" <${process.env.APP_EMAIL}>`,
       to,
       subject: `Happy Birthday, ${name}! 🎉`,
       html: data,
       attachments: [
         {
-          filename: "cake.png",
-          path: path.join(__dirname, "../images/cake.png"),
-          cid: "cake",
-          contentType: "image/png",
+          filename: randomImage,
+          path: imagePath,
+          cid: "randomImage",
+          contentType: getContentType(fileExtension),
           contentDisposition: "inline"
         }
       ]
@@ -67,12 +108,14 @@ const sendMail = async (to, name, retries = 3) => {
 
     const info = await transporter.sendMail(mailOptions);
     console.log(`Email sent to ${to}: ${info.response}`);
-    const telegramMessage = `✅ Successfully sent email to ${name} (${to}) at ${new Date().toLocaleString()}`;
+    const telegramMessage = `✅ Successfully sent email to ${name} (${to}) at ${new Date().toLocaleString()} with random image: ${randomImage}`;
     await sendTelegramMessage(telegramMessage);
     return info;
   } catch (error) {
     console.error(`Error sending email to ${to}:`, error);
-    const telegramErrorMessage = `❌ Failed to send email to ${name} (${to})\nError: ${error.message}\nRetries left: ${retries}\nTime: ${new Date().toLocaleString()}`;
+    const telegramErrorMessage = `❌ Failed to send email to ${name} (${to})\nError: ${
+      error.message
+    }\nRetries left: ${retries}\nTime: ${new Date().toLocaleString()}`;
     await sendTelegramMessage(telegramErrorMessage);
 
     if (retries > 0) {
