@@ -6,12 +6,12 @@ const {validateObjID, apiKeyMiddleware} =require('../middlewares')
 
 
 router.get('/tasks', apiKeyMiddleware, getAllTasks)
-router.get('/tasksbyid/:id?',validateObjID, getTaskById)
+router.get('/tasksbyid/:id?',validateObjID, apiKeyMiddleware, getTaskById)
 router.post('/tasks', apiKeyMiddleware, createTask)
-router.put('/tasksup/:id?',validateObjID, updateTask)
-router.delete('/taskdel/:id?', validateObjID, deleteTask)
+router.put('/tasksup/:id?',validateObjID, apiKeyMiddleware, updateTask)
+router.delete('/taskdel/:id?', validateObjID, apiKeyMiddleware, deleteTask)
 
-router.post('/bulk-upload', bulkUploadTasks)
+router.post('/bulk-upload', apiKeyMiddleware, bulkUploadTasks)
 
 
 module.exports = router
